@@ -3,9 +3,10 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-if (isset($_POST['month']) && isset($_POST['year'])) {
+if (isset($_POST['month']) && isset($_POST['year']) && isset($_POST['uid'])) {
     $month = $_POST['month'];
     $year = $_POST['year'];
+    $uid = $_POST['uid'];
 
     require('../connect.php');
 
@@ -17,7 +18,7 @@ if (isset($_POST['month']) && isset($_POST['year'])) {
     $endOfMonth = (string)date('Y-m-t', strtotime($startOfMonth));
     $endOfMonth = $endOfMonth . " 23:59:59";
 
-    $events = DB::query('SELECT * FROM meetings WHERE meetingtime >= %s AND meetingtime <= %s', $startOfMonth, $endOfMonth);
+    $events = DB::query('SELECT * FROM meetings m JOIN clubmembership c ON m.clubid = c.clubid WHERE m.meetingtime >= %s AND m.meetingtime <= %s AND c.userid = %s', $startOfMonth, $endOfMonth, $uid);
 
     $response = null;
 

@@ -14,10 +14,14 @@ if (isset($_POST['book'])) { //check the post data
 
     $curl = curl_init();
 
-    $book = htmlspecialchars(trim(stripslashes($_POST['book'])));
+    $book = urlencode(htmlspecialchars(trim(stripslashes($_POST['book']))));
+
+    $itemsPerPage = 25;
+
+    $APIKEY = 'AIzaSyAtShlOPeIM000Kz6GBARjyiD4rhwR1DnA';
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => sprintf("https://book-finder1.p.rapidapi.com/api/search?title=%s&results_per_page=25&page=%s", $book, $page),
+        CURLOPT_URL => sprintf("https://www.googleapis.com/books/v1/volumes?q=%s&key=%s&startIndex=%s&maxResults=25", $book, $APIKEY, (($page - 1) * $itemsPerPage)),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
