@@ -3,10 +3,11 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-if (isset($_POST['month']) && isset($_POST['year']) && isset($_POST['uid'])) {
+if (isset($_POST['month']) && isset($_POST['year']) && isset($_POST['uid']) && isset($_POST['token'])) {
     $month = $_POST['month'];
     $year = $_POST['year'];
     $uid = $_POST['uid'];
+    $token = $_POST['token'];
 
     require('../connect.php');
 
@@ -18,7 +19,7 @@ if (isset($_POST['month']) && isset($_POST['year']) && isset($_POST['uid'])) {
     $endOfMonth = (string)date('Y-m-t', strtotime($startOfMonth));
     $endOfMonth = $endOfMonth . " 23:59:59";
 
-    $events = DB::query('SELECT * FROM meetings m JOIN clubmembership c ON m.clubid = c.clubid WHERE m.meetingtime >= %s AND m.meetingtime <= %s AND c.userid = %s', $startOfMonth, $endOfMonth, $uid);
+    $events = DB::query('SELECT * FROM meetings m JOIN clubmembership c ON m.clubid = c.clubid JOIN users u on c.userid = u.userid WHERE m.meetingtime >= %s AND m.meetingtime <= %s AND u.userid = %s AND u.token = %s', $startOfMonth, $endOfMonth, $uid, $token);
 
     $response = null;
 

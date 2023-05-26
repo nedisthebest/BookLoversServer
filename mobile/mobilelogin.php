@@ -20,6 +20,8 @@ if (isset($_POST['email'])) {
     //go get nominated users data
     $row = DB::queryFirstRow('SELECT * FROM users WHERE email = %s', $email);
 
+
+
     $response = null;
 
     if (!$row) {
@@ -29,7 +31,21 @@ if (isset($_POST['email'])) {
     } else {
         //got a live user, let's check password
         if ($password == $row['password']) {
-            $response = array("result" => "Success", "username" => ($row['firstname'] . ' ' . $row['lastname']), "userid" => $row['userid']); //password correct
+
+
+            //generate authentication token
+            $token = hash("sha256", $email . $password . time());
+            DB::update(
+                'users',
+                array(
+                    'token' => $token,
+                    'lastaccess' => date('Y-m-d H:i:s')
+                ),
+                'email = %s',
+                $email
+            );
+
+            $response = array("result" => "Success", "firstname" => $row['firstname'], "lastname" => $row['lastname'], "userid" => $row['userid'], "token" => $token); //password correct, return success
 
             echo json_encode($response); //return response to mobile
         } else {
