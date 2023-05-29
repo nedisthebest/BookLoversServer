@@ -39,6 +39,10 @@ if (isset($_POST['book'])) { //check the post data
 
     curl_close($curl);
 
+    $response = json_decode($response, true);
+    $response["result"] = "Success";
+    $response = json_encode($response);
+
     if ($err) {
         echo "cURL Error #:" . $err;
     } else {

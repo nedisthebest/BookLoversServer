@@ -35,15 +35,7 @@ if (isset($_POST['email'])) {
 
             //generate authentication token
             $token = hash("sha256", $email . $password . time());
-            DB::update(
-                'users',
-                array(
-                    'token' => $token,
-                    'lastaccess' => date('Y-m-d H:i:s')
-                ),
-                'email = %s',
-                $email
-            );
+            DB::query("UPDATE `users` SET `token`=%s, `lastaccess`=NOW() WHERE `email`=%s", $token, $email);
 
             $response = array("result" => "Success", "firstname" => $row['firstname'], "lastname" => $row['lastname'], "userid" => $row['userid'], "token" => $token); //password correct, return success
 

@@ -25,13 +25,12 @@ CREATE TABLE `meetings` (
   `clubid` INTEGER UNSIGNED NOT NULL,
   `meetinglocation` varchar(255) NOT NULL,
   `meetingtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `chosenbookid` varchar(20) NOT NULL,
+  `bid` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`meetingid`),
-  FOREIGN KEY (`clubid`) REFERENCES `clubs` (`clubid`) ON DELETE CASCADE,
-  FOREIGN KEY (`chosenbookid`) REFERENCES `books` (`bookid`) ON DELETE NO ACTION
+  FOREIGN KEY (`clubid`) REFERENCES `clubs` (`clubid`) ON DELETE CASCADE
 );
 
-INSERT INTO `meetings` (`meetingid`, `clubid`, `meetinglocation`, `meetingtime`, `chosenbookid`) VALUES
+INSERT INTO `meetings` (`meetingid`, `clubid`, `meetinglocation`, `meetingtime`, `bid`) VALUES
 (1, 1, 'Parliament House', '2023-05-29 15:02:00', 1),
 (2, 1, 'Parliament House', '2023-05-22 01:10:39', 2),
 (12, 2, "St Joseph's College Library", '2024-01-15 20:41:00', 7),
@@ -64,30 +63,40 @@ INSERT INTO `users` (`userid`, `email`, `firstname`, `lastname`, `password`, `pe
 
 
 CREATE TABLE `clubmembership` (
-  `membershipid` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   `userid` INTEGER UNSIGNED NOT NULL,
   `clubid` INTEGER UNSIGNED NOT NULL,
   `role` VARCHAR(6) NOT NULL DEFAULT 'member',
   `status` VARCHAR(10) NOT NULL DEFAULT 'requested',
-  PRIMARY KEY (`membershipid`),
+  PRIMARY KEY (`userid`, `clubid`),
   FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE,
   FOREIGN KEY (`clubid`) REFERENCES `clubs` (`clubid`) ON DELETE CASCADE
 );
 
 
-INSERT INTO `clubmembership` (`membershipid`, `userid`, `clubid`, `role`, `status`) VALUES
-(1, 2, 1, 'admin', 'approved'),
-(2, 3, 1, 'member', 'requested'),
-(3, 4, 2, 'admin', 'approved'),
-(5, 5, 2, 'member', 'requested');
+INSERT INTO `clubmembership` (`userid`, `clubid`, `role`, `status`) VALUES
+(2, 1, 'admin', 'approved'),
+(3, 1, 'member', 'requested'),
+(4, 2, 'admin', 'approved'),
+(5, 2, 'member', 'requested');
 
 
 CREATE TABLE `votes` (
-  `voteid` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   `userid` INTEGER UNSIGNED NOT NULL,
-  `bookid` VARCHAR(50),
+  `clubid` INTEGER UNSIGNED NOT NULL,
+  `bookid` VARCHAR(50) NOT NULL,
   `vote` varchar(10) NOT NULL DEFAULT 'up',
-  PRIMARY KEY (`voteid`),
+  PRIMARY KEY (`userid`, `clubid`, `bookid`),
   FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE,
+  FOREIGN KEY (`clubid`) REFERENCES `clubs` (`clubid`) ON DELETE CASCADE
 );
 
+ CREATE TABLE `reviews` (
+  `userid` INTEGER UNSIGNED NOT NULL,
+  `meetingid` INTEGER UNSIGNED NOT NULL,
+  `rating` TINYINT NOT NULL,
+  `body` TEXT NOT NULL,
+  `title` varchar(500) NOT NULL,
+  PRIMARY KEY (`userid`, `meetingid`),
+  FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE,
+  FOREIGN KEY (`meetingid`) REFERENCES `meetings` (`meetingid`) ON DELETE CASCADE
+ );

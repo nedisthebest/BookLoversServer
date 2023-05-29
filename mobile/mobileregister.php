@@ -37,8 +37,6 @@ if (isset($_POST['email']) && isset($_POST['fname']) && isset($_POST['sname']) &
             )
         );
 
-        $userID = DB::queryFirstField('SELECT userid FROM users WHERE email = %s', $email);
-
         $response = array("result" => "Success"); //password correct, return success
 
         echo json_encode($response); //return response to mobile
