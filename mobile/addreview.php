@@ -11,9 +11,36 @@ if (isset($_POST['userid']) && isset($_POST['token']) && isset($_POST['meetingid
     $rating = $_POST['rating'];
     $title = $_POST['title'];
 
-    require('../connect.php');
 
     try {
+        if ($title === "") {
+            $response = array("result" => "Error", "message" => "Please Enter a Review Title");
+            echo json_encode($response);
+            exit;
+        }
+        if ($body === "") {
+            $response = array("result" => "Error", "message" => "Please Enter a Review");
+            echo json_encode($response);
+            exit;
+        }
+        if ($rating === "") {
+            $response = array("result" => "Error", "message" => "Please Enter a Rating");
+            echo json_encode($response);
+            exit;
+        }
+        if ((float) $rating > 5 || (float) $rating < 1) {
+            $response = array("result" => "Error", "message" => "Rating must be between 1 and 5");
+            echo json_encode($response);
+            exit;
+        }
+        if (($rating * 2) % 1 != 0) {
+            $response = array("result" => "Error", "message" => "Rating must be a multiple of 0.5");
+            echo json_encode($response);
+            exit;
+        }
+
+        require('../connect.php');
+
         $clubid = DB::queryFirstField("SELECT clubid FROM meetings WHERE meetingid=%s", $meetingid);
 
         $ismember = DB::query("SELECT * FROM clubmembership c JOIN users u ON u.userid=c.userid WHERE u.userid=%s AND token=%s AND c.clubid=%s", $uid, $token, $clubid);

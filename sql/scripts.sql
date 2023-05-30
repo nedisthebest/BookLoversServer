@@ -93,7 +93,7 @@ CREATE TABLE `votes` (
  CREATE TABLE `reviews` (
   `userid` INTEGER UNSIGNED NOT NULL,
   `meetingid` INTEGER UNSIGNED NOT NULL,
-  `rating` TINYINT NOT NULL,
+  `rating` FLOAT NOT NULL,
   `body` TEXT NOT NULL,
   `title` varchar(500) NOT NULL,
   PRIMARY KEY (`userid`, `meetingid`),

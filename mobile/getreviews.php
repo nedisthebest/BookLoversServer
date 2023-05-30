@@ -27,7 +27,9 @@ if (isset($_POST['userid']) && isset($_POST['token'])) {
         }
         $reviews = DB::query("SELECT userid, rating, body, title FROM reviews WHERE meetingid=%s", $meetingid);
 
-        $response = array("result" => "Success", "reviews" => $reviews);
+        $averageratings = DB::queryFirstField("SELECT AVG(rating) FROM reviews WHERE meetingid=%s", $meetingid);
+
+        $response = array("result" => "Success", "reviews" => $reviews, "average" => $averageratings);
         echo json_encode($response);
     } catch (Exception $e) {
         if ($e->getCode() == 1062) {
