@@ -25,7 +25,7 @@ if (isset($_POST['userid']) && isset($_POST['token'])) {
             echo json_encode($response);
             exit;
         }
-        $reviews = DB::query("SELECT userid, rating, body, title FROM reviews WHERE meetingid=%s", $meetingid);
+        $reviews = DB::query("SELECT CONCAT(u.firstname, ' ', u.lastname) as `name`, r.rating, r.body, r.title FROM reviews r JOIN users u on r.userid=u.userid WHERE meetingid=%s", $meetingid);
 
         $averageratings = DB::queryFirstField("SELECT AVG(rating) FROM reviews WHERE meetingid=%s", $meetingid);
 

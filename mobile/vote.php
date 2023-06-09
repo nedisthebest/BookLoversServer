@@ -8,7 +8,16 @@ if (isset($_POST['userid']) && isset($_POST['token']) && isset($_POST['bid']) &&
     $token = $_POST['token'];
     $bid = $_POST['bid'];
     $clubid = $_POST['clubid'];
-
+    if (isset($_POST['vote'])) {
+        $vote = $_POST['vote'];
+    } else {
+        $vote = 1;
+    }
+    if (abs($vote) > 1 || !($vote % 1 == 0)) {
+        $response = array("result" => "Error", "message" => "Invalid vote");
+        echo json_encode($response);
+        exit;
+    }
 
     require('../connect.php');
 
@@ -38,12 +47,40 @@ if (isset($_POST['userid']) && isset($_POST['token']) && isset($_POST['bid']) &&
 
 
     try {
+        if (DB::query("SELECT * FROM votes WHERE userid = %s AND bookid = %s AND clubid = %s", $uid, $bid, $clubid)) {
+            if ($vote == 0) {
+                DB::delete(
+                    'votes',
+                    "userid=%s AND bookid=%s AND clubid=%s",
+                    $uid,
+                    $bid,
+                    $clubid
+                );
+                $response = array("result" => "Success");
+                echo json_encode($response);
+                exit;
+            }
+            DB::update(
+                'votes',
+                array(
+                    'vote' => $vote
+                ),
+                "userid=%s AND bookid=%s AND clubid=%s",
+                $uid,
+                $bid,
+                $clubid
+            );
+            $response = array("result" => "Success");
+            echo json_encode($response);
+            exit;
+        }
         DB::insert(
             'votes',
             array(
                 'userid' => $uid,
                 'bookid' => $bid,
-                'clubid' => $clubid
+                'clubid' => $clubid,
+                'vote' => $vote
             )
         );
     } catch (Exception $e) {

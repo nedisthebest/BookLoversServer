@@ -21,17 +21,13 @@ if (isset($_POST['book'])) { //check the post data
     $APIKEY = 'AIzaSyAtShlOPeIM000Kz6GBARjyiD4rhwR1DnA';
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => sprintf("https://www.googleapis.com/books/v1/volumes?q=%s&key=%s&startIndex=%s&maxResults=25", $book, $APIKEY, (($page - 1) * $itemsPerPage)),
+        CURLOPT_URL => sprintf("https://www.googleapis.com/books/v1/volumes?q=%s&key=%s&startIndex=%s&maxResults=%s", $book, $APIKEY, (($page - 1) * $itemsPerPage), $itemsPerPage),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
         CURLOPT_TIMEOUT => 30,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "GET",
-        CURLOPT_HTTPHEADER => [
-            "X-RapidAPI-Host: book-finder1.p.rapidapi.com",
-            "X-RapidAPI-Key: b140c55e12mshfba47be9f525419p1553ebjsn3a11ca2ca0ec"
-        ],
+        CURLOPT_CUSTOMREQUEST => "GET"
     ]);
 
     $response = curl_exec($curl);
@@ -39,13 +35,12 @@ if (isset($_POST['book'])) { //check the post data
 
     curl_close($curl);
 
-    $response = json_decode($response, true);
-    $response["result"] = "Success";
-    $response = json_encode($response);
-
     if ($err) {
-        echo "cURL Error #:" . $err;
+        $response = json_encode(array("result" => "Error", "message" => "Error while fetching data from Books API"));
     } else {
-        echo $response;
+        $response = json_decode($response, true);
+        $response["result"] = "Success";
+        $response = json_encode($response);
     }
+    echo $response;
 }

@@ -38,8 +38,6 @@ if (isset($_POST['userid']) && isset($_POST['token'])) {
     }
 
 
-    $response = null;
-
     $response = array("result" => "Success");
     echo json_encode($response);
 } else {

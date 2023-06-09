@@ -31,8 +31,6 @@ if (isset($_POST['email'])) {
     } else {
         //got a live user, let's check password
         if ($password == $row['password']) {
-
-
             //generate authentication token
             $token = hash("sha256", $email . $password . time());
             DB::query("UPDATE `users` SET `token`=%s, `lastaccess`=NOW() WHERE `email`=%s", $token, $email);

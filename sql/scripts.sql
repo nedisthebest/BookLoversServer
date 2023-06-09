@@ -23,21 +23,21 @@ INSERT INTO `clubs` (`clubid`, `clubname`, `suburb`, `state`, `status`) VALUES
 CREATE TABLE `meetings` (
   `meetingid` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   `clubid` INTEGER UNSIGNED NOT NULL,
-  `meetinglocation` varchar(255) NOT NULL,
-  `meetingtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `meetinglocation` varchar(255) NOT NULL DEFAULT "No location provided",
+  `meetingtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `bid` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`meetingid`),
   FOREIGN KEY (`clubid`) REFERENCES `clubs` (`clubid`) ON DELETE CASCADE
 );
 
 INSERT INTO `meetings` (`meetingid`, `clubid`, `meetinglocation`, `meetingtime`, `bid`) VALUES
-(1, 1, 'Parliament House', '2023-05-29 15:02:00', 1),
-(2, 1, 'Parliament House', '2023-05-22 01:10:39', 2),
-(12, 2, "St Joseph's College Library", '2024-01-15 20:41:00', 7),
-(15, 2, "St Joseph's College Library", '2023-12-18 20:47:00', 9),
-(29, 2, "St Joseph's College Library", '2023-08-18 13:14:00', 17),
-(32, 2, "St Joseph's College Library", '2023-06-02 14:14:00', 20),
-(33, 2, "St Joseph's College Library", '2023-05-25 15:10:00', 21);
+(1, 1, 'Parliament House', '2023-05-29 15:02:00', "hvOdCwAAQBAJ"),
+(2, 1, 'Parliament House', '2023-05-22 01:10:39', "hvOdCwAAQBAJ"),
+(12, 2, "St Joseph's College Library", '2024-01-15 20:41:00', "hvOdCwAAQBAJ"),
+(15, 2, "St Joseph's College Library", '2023-12-18 20:47:00', "hvOdCwAAQBAJ"),
+(29, 2, "St Joseph's College Library", '2023-08-18 13:14:00', "hvOdCwAAQBAJ"),
+(32, 2, "St Joseph's College Library", '2023-06-02 14:14:00', "hvOdCwAAQBAJ"),
+(33, 2, "St Joseph's College Library", '2023-05-25 15:10:00', "hvOdCwAAQBAJ");
 
 
 CREATE TABLE `users` (
@@ -76,6 +76,7 @@ CREATE TABLE `clubmembership` (
 INSERT INTO `clubmembership` (`userid`, `clubid`, `role`, `status`) VALUES
 (2, 1, 'admin', 'approved'),
 (3, 1, 'member', 'requested'),
+(5, 1, 'member', 'requested'),
 (4, 2, 'admin', 'approved'),
 (5, 2, 'member', 'requested');
 
@@ -84,11 +85,19 @@ CREATE TABLE `votes` (
   `userid` INTEGER UNSIGNED NOT NULL,
   `clubid` INTEGER UNSIGNED NOT NULL,
   `bookid` VARCHAR(50) NOT NULL,
-  `vote` varchar(10) NOT NULL DEFAULT 'up',
+  `vote` TINYINT NOT NULL DEFAULT 1,
   PRIMARY KEY (`userid`, `clubid`, `bookid`),
   FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE,
   FOREIGN KEY (`clubid`) REFERENCES `clubs` (`clubid`) ON DELETE CASCADE
 );
+
+INSERT INTO `votes` (`userid`, `clubid`, `bookid`, `vote`) VALUES
+(5, 1, 'hvOdCwAAQBAJ', 1),
+(5, 1, 'n7egCgAAQBAJ', -1),
+(5, 2, '0kIenwEACAAJ', 1),
+(5, 2, '1k8mAQAAIAAJ', 1),
+(5, 2, 'jFUQvgAACAAJ', -1);
+
 
  CREATE TABLE `reviews` (
   `userid` INTEGER UNSIGNED NOT NULL,
@@ -100,3 +109,8 @@ CREATE TABLE `votes` (
   FOREIGN KEY (`userid`) REFERENCES `users` (`userid`) ON DELETE CASCADE,
   FOREIGN KEY (`meetingid`) REFERENCES `meetings` (`meetingid`) ON DELETE CASCADE
  );
+
+
+INSERT INTO `reviews` (`userid`, `meetingid`, `rating`, `body`, `title`) VALUES
+(4, 33, 1, 'I hate this book with a f***ing passion and you deserve to die in f***ing hell for choosing this book', 'This book is utter s***'),
+(5, 33, 4, 'Review Contents', 'New Review');

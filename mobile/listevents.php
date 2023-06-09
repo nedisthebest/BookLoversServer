@@ -9,6 +9,8 @@ if (isset($_POST['month']) && isset($_POST['year']) && isset($_POST['uid']) && i
     $uid = $_POST['uid'];
     $token = $_POST['token'];
 
+    $APIKEY = 'AIzaSyAtShlOPeIM000Kz6GBARjyiD4rhwR1DnA';
+
     require('../connect.php');
 
     //query database for all events in that month/year (month: 1-12, year: xxxx)
@@ -22,6 +24,34 @@ if (isset($_POST['month']) && isset($_POST['year']) && isset($_POST['uid']) && i
     $events = DB::query('SELECT * FROM meetings m JOIN clubmembership c ON m.clubid = c.clubid JOIN users u on c.userid = u.userid WHERE m.meetingtime >= %s AND m.meetingtime <= %s AND u.userid = %s AND u.token = %s', $startOfMonth, $endOfMonth, $uid, $token);
 
     $response = null;
+
+    foreach ($events as &$event) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => sprintf("https://www.googleapis.com/books/v1/volumes/%s?key=%s", $event["bid"], $APIKEY),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET"
+        ]);
+
+        $book = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        $book = json_decode($book, true);
+        if ($response['error']) {
+            $response = array("result" => "Error", "message" => "Google Books API Error");
+            echo json_encode($response);
+            exit;
+        }
+
+        $event["book"] = $book;
+    }
 
     $response = array("result" => "Success", "events" => $events);
     echo json_encode($response);
