@@ -6,9 +6,9 @@
     margin-left: 20px;
 }
 
-.form-group {
-    /*padding-top:10px;*/
-}
+/* .form-group {
+    padding-top:10px;
+} */
 
 h1,
 h2,
@@ -29,5 +29,5 @@ h2 {
 }
 
 .messingAroundWithVSCodeColorPickerForTheMobileApp {
-    color: #643fbc;
+    color: #868788;
 }
