@@ -8,4 +8,3 @@
 	DB::$password = '';
 	DB::$dbName = 'bookreview';
 
-?>
