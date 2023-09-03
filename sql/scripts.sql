@@ -53,13 +53,13 @@ CREATE TABLE `users` (
   PRIMARY KEY (`userid`)
 );
 
-INSERT INTO `users` (`userid`, `email`, `firstname`, `lastname`, `password`, `permission`, `postcode`, `lastaccess`) VALUES
-(1, 'admin@admin', 'Peter', 'Whitehouse', SHA2('password', 256), 'admin', '', '2023-05-18 03:53:23'),
-(2, 'albo@albo', 'Albo', 'Albo', SHA2('password', 256), 'clubadmin', '0000', '2023-05-19 03:04:58'),
-(3, 'student@student', 'student', 'student', SHA2('password', 256), 'user', '6000', '2023-05-21 02:44:57'),
-(4, 'clubadmin@clubadmin', 'clubadmin', 'clubadmin', SHA2('password', 256), 'clubadmin', '5000', '2023-05-21 03:56:01'),
-(5, 'member@member', 'member', 'member', SHA2('password', 256), 'user', '4000', '2023-05-21 04:01:09'),
-(6, 'bart@simpson', 'Bart', 'Simpson', SHA2('password', 256), 'clubadmin', '6000', '2023-05-21 22:26:48');
+INSERT INTO `users` (`email`, `firstname`, `lastname`, `password`, `permission`, `postcode`, `lastaccess`) VALUES
+('admin@admin', 'Peter', 'Whitehouse', SHA2(CONCAT('admin@adminh',SHA2('password', 256)),256), 'admin', '', '2023-05-18 03:53:23'),
+('albo@albo', 'Albo', 'Albo', SHA2(CONCAT('albo@albo',SHA2('password', 256)),256), 'clubadmin', '0000', '2023-05-19 03:04:58'),
+('student@student', 'student', 'student', SHA2(CONCAT('student@student', SHA2('password', 256)), 256), 'user', '6000', '2023-05-21 02:44:57'),
+('clubadmin@clubadmin', 'clubadmin', 'clubadmin', SHA2(CONCAT('clubadmin@clubadmin',SHA2('password', 256)),256), 'clubadmin', '5000', '2023-05-21 03:56:01'),
+('member@member', 'member', 'member', SHA2(CONCAT('member@member',SHA2('password', 256)),256), 'user', '4000', '2023-05-21 04:01:09'),
+('bart@simpson', 'Bart', 'Simpson', SHA2(CONCAT('bart@simpson',SHA2('password', 256)),256), 'clubadmin', '6000', '2023-05-21 22:26:48');
 
 
 CREATE TABLE `clubmembership` (
@@ -99,7 +99,7 @@ INSERT INTO `votes` (`userid`, `clubid`, `bookid`, `vote`) VALUES
 (5, 2, 'jFUQvgAACAAJ', -1);
 
 
- CREATE TABLE `reviews` (
+CREATE TABLE `reviews` (
   `userid` INTEGER UNSIGNED NOT NULL,
   `meetingid` INTEGER UNSIGNED NOT NULL,
   `rating` FLOAT NOT NULL,

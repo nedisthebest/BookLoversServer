@@ -12,7 +12,7 @@ if (isset($_POST['email'])) {
 
     //retrieve and cleanup user input
     $email = trim(stripslashes(htmlspecialchars($_POST['email'])));
-    $password = hash("sha256", $_POST['password']); //hash the password
+    $password = hash("sha256", $email.$_POST['password']); //hash the password
 
     //handshake with db
     require('../connect.php');

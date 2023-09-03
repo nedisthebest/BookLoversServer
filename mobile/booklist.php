@@ -41,7 +41,7 @@ if (isset($_POST['userid']) && isset($_POST['token']) && isset($_POST['clubid'])
             curl_close($curl);
 
             $response = json_decode($response, true);
-            if ($response['error']) {
+            if (isset($response['error'])) {
                 $response = array("result" => "Error", "message" => "Google Books API Error");
                 echo json_encode($response);
                 exit;

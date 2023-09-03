@@ -10,7 +10,7 @@ if (isset($_POST['email']) && isset($_POST['fname']) && isset($_POST['sname']) &
     $email = trim(stripslashes(htmlspecialchars($_POST['email'])));
     $firstname = trim(stripslashes(htmlspecialchars($_POST['fname'])));
     $lastname = trim(stripslashes(htmlspecialchars($_POST['sname'])));
-    $password = $_POST['password'];
+    $password = hash("sha256", $email.$_POST['password']);
     if (isset($_POST['pcode'])) {
         $postcode = trim(stripslashes(htmlspecialchars($_POST['pcode'])));
     } else {
@@ -25,7 +25,6 @@ if (isset($_POST['email']) && isset($_POST['fname']) && isset($_POST['sname']) &
     $response = null;
 
     if (!$row) {
-
         DB::insert(
             'users',
             array(
@@ -33,7 +32,7 @@ if (isset($_POST['email']) && isset($_POST['fname']) && isset($_POST['sname']) &
                 'firstname' => $firstname,
                 'lastname' => $lastname,
                 'postcode' => $postcode,
-                'password' => hash("sha256", $password),
+                'password' => $password,
             )
         );
 
