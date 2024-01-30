@@ -18,7 +18,7 @@ if (isset($_POST['book'])) { //check the post data
 
     $itemsPerPage = 25;
 
-    $APIKEY = 'AIzaSyAtShlOPeIM000Kz6GBARjyiD4rhwR1DnA';
+    $APIKEY = 'APIKEY';
 
     curl_setopt_array($curl, [
         CURLOPT_URL => sprintf("https://www.googleapis.com/books/v1/volumes?q=%s&key=%s&startIndex=%s&maxResults=%s", $book, $APIKEY, (($page - 1) * $itemsPerPage), $itemsPerPage),

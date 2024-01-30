@@ -9,7 +9,7 @@ if (isset($_POST['userid']) && isset($_POST['token']) && isset($_POST['clubid'])
     $token = $_POST['token'];
     $clubid = $_POST['clubid'];
 
-    $APIKEY = 'AIzaSyAtShlOPeIM000Kz6GBARjyiD4rhwR1DnA';
+    $APIKEY = 'YOURAPIKEY';
 
     require('../connect.php');
 
