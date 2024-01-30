@@ -9,7 +9,7 @@ if (isset($_POST['month']) && isset($_POST['year']) && isset($_POST['uid']) && i
     $uid = $_POST['uid'];
     $token = $_POST['token'];
 
-    $APIKEY = 'AIzaSyAtShlOPeIM000Kz6GBARjyiD4rhwR1DnA';
+    $APIKEY = 'YOURAPIKEY';
 
     require('../connect.php');
 
